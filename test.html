@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leaflet Map with Fixed and Dynamic Markers</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <style>
+        #map { height: 500px; width: 100%; }
+        #input-container { margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <div id="input-container">
+        <input type="text" id="lat" placeholder="Enter latitude" />
+        <input type="text" id="lon" placeholder="Enter longitude" />
+        <button onclick="addDynamicMarker()">Add Marker</button>
+    </div>
+    <script>
+        // Define your fixed latitude and longitude
+        const fixedLat = 16.7411;
+        const fixedLon = 95.6514;
+
+        // Initialize the map
+        var map = L.map('map').setView([fixedLat, fixedLon], 13);
+
+        // Set up the OpenStreetMap layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Add the fixed marker
+        var fixedMarker = L.marker([fixedLat, fixedLon]).addTo(map);
+        fixedMarker.bindPopup('<b>Fixed Location</b><br>Latitude: ' + fixedLat + '<br>Longitude: ' + fixedLon).openPopup();
+
+        // Function to add a dynamic marker based on user input
+        function addDynamicMarker() {
+            // Get latitude and longitude from input fields
+            var lat = document.getElementById('lat').value;
+            var lon = document.getElementById('lon').value;
+
+            // Validate the input
+            if (!lat || !lon) {
+                alert("Please enter valid latitude and longitude.");
+                return;
+            }
+
+            // Parse input as float
+            lat = parseFloat(lat);
+            lon = parseFloat(lon);
+
+            // Check if inputs are valid numbers
+            if (isNaN(lat) || isNaN(lon)) {
+                alert("Please enter valid numeric latitude and longitude.");
+                return;
+            }
+
+            // Add the dynamic marker
+            var dynamicMarker = L.marker([lat, lon]).addTo(map);
+            dynamicMarker.bindPopup('<b>Dynamic Location</b><br>Latitude: ' + lat + '<br>Longitude: ' + lon).openPopup();
+
+            // Center the map on the new marker
+            map.setView([lat, lon], 13);
+        }
+    </script>
+</body>
+</html>
